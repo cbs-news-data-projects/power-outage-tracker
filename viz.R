@@ -25,9 +25,11 @@ nc <- read.csv("data/nc/latest_file.csv") %>% clean_names
 tn <- read.csv("data/tn/latest_file.csv") %>% clean_names
 ## VIRGINIA
 va <- read.csv("data/va/latest_file.csv") %>% clean_names
+## WEST VIRGINIA
+wv <- read.csv("data/wv/latest_file.csv") %>% clean_names
 
 # Combine the two data frames
-combined_data <- rbind(fl, ga, sc, nc, tn, va)
+combined_data <- rbind(fl, ga, sc, nc, tn, va, wv)
 combined_data <- combined_data %>% filter(customer_out != 0) #removing 0 outages
 
 # Formatting date/time
@@ -35,7 +37,11 @@ combined_data <- combined_data %>% filter(customer_out != 0) #removing 0 outages
 combined_data$timestamp <- as.POSIXct(combined_data$timestamp, format="%a %b %d %Y %H:%M:%S", tz="America/New_York")
 
 # Convert from Pacific Time to Eastern Time and format to 12-hour time with AM/PM
-combined_data$timestamp_eastern <- format(with_tz(combined_data$timestamp, tzone = "America/New_York"), "%a %b %d %Y %I:00 %p")
+combined_data$timestamp_eastern <- format(with_tz(combined_data$timestamp, tzone = "America/New_York"), "%a %b %d %Y %I:%M %p")
+
+# Get a total number of outages for the chatter
+total_outages <- sum(combined_data$customer_out)
+total_outages <- format(total_outages, big.mark = ",", scientific = FALSE)
 
 
 # Make the datawrapper
@@ -45,6 +51,7 @@ dw_edit_chart(
   chart_id = "Uhq3Z",
   api_key = dw_api_key,
   title = "Tracking power outages in Hurricane Helene's path",
+  intro = paste( "There are currently", "<b>", total_outages, "</b>", "customers experiencing power outages in the states highlighted on the map below. Click or hover over a county to see more information."),
   annotate = "Note: Data updates every 30 minutes",
   byline = "Taylor Johnston / CBS News",
   source_name = "Find Energy",
