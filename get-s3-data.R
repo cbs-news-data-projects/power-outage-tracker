@@ -2,9 +2,9 @@ library(aws.s3)
 library(dotenv)
 
 # Set AWS credentials and region
-Sys.setenv("AWS_ACCESS_KEY_ID" = Sys.getenv("access_id"),
-           "AWS_SECRET_ACCESS_KEY" = Sys.getenv("secret_key"),
-           "AWS_DEFAULT_REGION" = Sys.getenv("region"))
+Sys.setenv("AWS_ACCESS_KEY_ID" = Sys.getenv("AWS_ACCESS_KEY_ID"),
+           "AWS_SECRET_ACCESS_KEY" = Sys.getenv("AWS_SECRET_ACCESS_KEY"),
+           "AWS_DEFAULT_REGION" = Sys.getenv("AWS_DEFAULT_REGION"))
 
 bucket_name <- "fe-outage-data"
 file_list_path <- "downloaded_files.txt"
