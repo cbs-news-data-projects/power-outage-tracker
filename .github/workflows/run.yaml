@@ -28,6 +28,11 @@ jobs:
 
       - name: Set up environment variables based on DATAWRAPPR secret
         run: echo "DW_API_KEY=${{ secrets.DATAWRAPPR }}" >> $GITHUB_ENV
+        
+      - name: Set up AWS credentials
+        run: |
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.access_id }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.secret_key }}" >> $GITHUB_ENV
 
       - name: Install DatawRappr package
         run: |
