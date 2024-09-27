@@ -45,6 +45,7 @@ total_outages <- format(total_outages, big.mark = ",", scientific = FALSE)
 
 
 # Make the datawrapper
+datawrapper_auth(api_key = dw_api_key)
 dw_data_to_chart(combined_data, "Uhq3Z", api_key = dw_api_key)
 
 dw_edit_chart(
