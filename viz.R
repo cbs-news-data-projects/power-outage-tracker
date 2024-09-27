@@ -39,6 +39,18 @@ combined_data$timestamp <- as.POSIXct(combined_data$timestamp, format="%a %b %d 
 # Convert from Pacific Time to Eastern Time and format to 12-hour time with AM/PM
 combined_data$timestamp_eastern <- format(with_tz(combined_data$timestamp, tzone = "America/New_York"), "%a %b %d %Y %I:%M %p")
 
+# Clean data
+clean <- combined_data %>% select(county, county_fips, customer_out, timestamp_eastern)
+
+result <- clean %>%
+  group_by(county_fips) %>%
+  summarise(
+    county = first(county),  # Keep the first occurrence of county name
+    total_customer_out = sum(customer_out),  # Sum the customer_out
+    latest_timestamp = max(timestamp_eastern),  # Get the latest timestamp
+    .groups = 'drop'  # Drop the grouping
+  )
+
 # Get a total number of outages for the chatter
 total_outages <- sum(combined_data$customer_out)
 total_outages <- format(total_outages, big.mark = ",", scientific = FALSE)
@@ -46,7 +58,7 @@ total_outages <- format(total_outages, big.mark = ",", scientific = FALSE)
 
 # Make the datawrapper
 datawrapper_auth(api_key = dw_api_key)
-dw_data_to_chart(combined_data, "Uhq3Z", api_key = dw_api_key)
+dw_data_to_chart(result, "Uhq3Z", api_key = dw_api_key)
 
 dw_edit_chart(
   chart_id = "Uhq3Z",
