@@ -38,8 +38,15 @@ download_latest_file <- function(prefix) {
   # List the files in the S3 bucket for today's date
   files <- get_bucket(bucket_name, prefix = paste0(prefix, "/", today_date))
   
-  # Get the names of files in the bucket
-  bucket_files <- sapply(files, function(x) x$Key)
+  # Check if files are valid objects and extract file names
+  bucket_files <- sapply(files, function(x) if (!is.null(x$Key)) x$Key else NA)
+  bucket_files <- bucket_files[!is.na(bucket_files)]  # Remove NAs
+  
+  # Ensure bucket_files is a character vector
+  if (length(bucket_files) == 0) {
+    cat(paste("No files found for", prefix, "today.\n"))
+    return(NULL)
+  }
   
   # Identify files that are relevant for today
   relevant_files <- bucket_files[basename(bucket_files) %in% basename(file_paths_today)]
@@ -59,6 +66,9 @@ download_latest_file <- function(prefix) {
     # Specify destination of file
     destination_file_path <- file.path("data", prefix, "latest_file.csv")
     
+    # Create directory if it doesn't exist
+    dir.create(file.path("data", prefix), showWarnings = FALSE, recursive = TRUE)
+    
     # Download the latest file
     save_object(object = latest_file, bucket = bucket_name, file = destination_file_path)
     
@@ -72,7 +82,7 @@ download_latest_file <- function(prefix) {
   }
 }
 
-# Download the latest files these prefixes
+# Download the latest files for these prefixes
 download_latest_file("fl")
 download_latest_file("ga")
 download_latest_file("tn")
@@ -80,3 +90,5 @@ download_latest_file("sc")
 download_latest_file("nc")
 download_latest_file("va")
 download_latest_file("wv")
+download_latest_file("ky")
+download_latest_file("oh")
