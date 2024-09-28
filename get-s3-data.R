@@ -39,7 +39,11 @@ download_latest_file <- function(prefix) {
   files <- get_bucket(bucket_name, prefix = paste0(prefix, "/", today_date))
   
   # Get the names of files in the bucket
-  bucket_files <- sapply(files, function(x) x$Key)
+  if (length(files) > 0) {
+    bucket_files <- sapply(files, function(x) x$Key)  # Extract 'Key' as character vector
+  } else {
+    bucket_files <- character(0)  # Handle the case where no files are found
+  }
   
   # Identify files that are relevant for today
   relevant_files <- bucket_files[basename(bucket_files) %in% basename(file_paths_today)]
@@ -67,6 +71,8 @@ download_latest_file <- function(prefix) {
     
     # Save the updated list of filenames
     writeLines(downloaded_files, file_list_path)
+    
+    cat(paste("Downloaded latest file for", prefix, ":", latest_file, "\n"))
   } else {
     cat(paste("No new files to download for", prefix, "today.\n"))
   }
