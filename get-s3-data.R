@@ -43,6 +43,7 @@ download_latest_file <- function(prefix) {
   
   # Debugging output to check the structure of bucket_files
   cat("Bucket files for prefix", prefix, ":", bucket_files, "\n")
+  cat("Expected file paths today:", file_paths_today, "\n")
   
   # Ensure bucket_files is a character vector before proceeding
   if (!is.character(bucket_files)) {
@@ -83,6 +84,7 @@ download_latest_file <- function(prefix) {
     cat(paste("No new files to download for", prefix, "today.\n"))
   }
 }
+
 # Prefixes to download
 prefixes <- c("fl", "ga", "tn", "sc", "nc", "va", "wv", "ky", "oh")
 
