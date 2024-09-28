@@ -33,8 +33,21 @@ download_latest_file <- function(prefix) {
   # List the files in the S3 bucket for today's date
   files <- get_bucket(bucket_name, prefix = paste0(prefix, "/", today_date))
   
-  # Get the names of files in the bucket
-  bucket_files <- sapply(files, function(x) x$Key)
+  # Check if files is a list and extract the names of files in the bucket
+  if (is.list(files) && length(files) > 0) {
+    bucket_files <- sapply(files, function(x) x$Key)
+  } else {
+    bucket_files <- character(0)  # Initialize as empty character vector if no files found
+    cat(paste("No files found in the bucket for prefix:", prefix, "\n"))
+  }
+  
+  # Debugging output to check the structure of bucket_files
+  cat("Bucket files for prefix", prefix, ":", bucket_files, "\n")
+  
+  # Ensure bucket_files is a character vector before proceeding
+  if (!is.character(bucket_files)) {
+    stop("Error: bucket_files is not a character vector.")
+  }
   
   # Identify relevant files for today
   relevant_files <- bucket_files[basename(bucket_files) %in% basename(file_paths_today)]
@@ -70,7 +83,6 @@ download_latest_file <- function(prefix) {
     cat(paste("No new files to download for", prefix, "today.\n"))
   }
 }
-
 # Prefixes to download
 prefixes <- c("fl", "ga", "tn", "sc", "nc", "va", "wv", "ky", "oh")
 
