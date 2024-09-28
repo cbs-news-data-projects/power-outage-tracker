@@ -32,20 +32,14 @@ time_intervals <- as.vector(time_intervals)
 
 # Function to download the latest file for a given prefix
 download_latest_file <- function(prefix) {
-  cat("Downloading files for prefix:", prefix, "\n")  # Debugging line
-  
   # Create a vector to hold the full file paths for today
   file_paths_today <- paste0(prefix, "/", today_date, "-", time_intervals, ".csv")
   
   # List the files in the S3 bucket for today's date
   files <- get_bucket(bucket_name, prefix = paste0(prefix, "/", today_date))
-  if (is.null(files) || length(files) == 0) {
-    cat(paste("No files found in the bucket for", prefix, "today.\n"))
-    return()
-  }
   
   # Get the names of files in the bucket
-  bucket_files <- unlist(lapply(files, function(x) x$Key))
+  bucket_files <- sapply(files, function(x) x$Key)
   
   # Identify files that are relevant for today
   relevant_files <- bucket_files[basename(bucket_files) %in% basename(file_paths_today)]
