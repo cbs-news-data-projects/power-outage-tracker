@@ -29,9 +29,11 @@ va <- read.csv("data/va/latest_file.csv") %>% clean_names
 wv <- read.csv("data/wv/latest_file.csv") %>% clean_names
 ## KENTUCKY
 ky <- read.csv("data/ky/latest_file.csv") %>% clean_names
+## OHIO
+oh <- read.csv("data/oh/latest_file.csv") %>% clean_names
 
 # Combine the two data frames
-combined_data <- rbind(fl, ga, sc, nc, tn, va, wv, ky)
+combined_data <- rbind(fl, ga, sc, nc, tn, va, wv, ky, oh)
 combined_data <- combined_data %>% filter(customer_out != 0) #removing 0 outages
 
 # Formatting date/time
