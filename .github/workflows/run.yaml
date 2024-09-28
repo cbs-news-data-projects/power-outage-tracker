@@ -12,9 +12,6 @@ jobs:
   run-scripts:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 
@@ -22,37 +19,33 @@ jobs:
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           packages: |
-            dplyr
-            janitor
-            tidyr
-            lubridate
-            dotenv
-            aws.s3
+            any::dplyr 
+            any::janitor
+            any::tidyr
+            any::lubridate
+            any::dotenv
+            any::aws.s3
 
+      - name: Set up environment variables based on DATAWRAPPR secret
+        run: echo "DW_API_KEY=${{ secrets.DATAWRAPPR }}" >> $GITHUB_ENV
+        
       - name: Set up AWS credentials
         run: |
           echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
-          echo "AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }}" >> $GITHUB_ENV
 
       - name: Install DatawRappr package
         run: |
           Rscript -e "pak::pkg_install('munichrocker/DatawRappr')"
 
-      - name: Check if get-s3-data.R exists
-        run: |
-          if [ -f get-s3-data.R ]; then
-            echo "File exists."
-          else
-            echo "File does not exist."
-            exit 1
-          fi
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-      - name: Run get-s3-data.R script
-        run: Rscript -e 'tryCatch({ source("get-s3-data.R") }, error = function(e) { cat("Error in get-s3-data.R:", e$message, "\n") })'
+      - name: Run script
+        run: Rscript -e 'source("get-s3-data.R")'
 
-      - name: Run viz.R script
-        run: Rscript -e 'tryCatch({ source("viz.R") }, error = function(e) { cat("Error in viz.R:", e$message, "\n") })'
+      - name: Run script
+        run: Rscript -e 'source("viz.R")'
 
       - name: Commit results
         run: |

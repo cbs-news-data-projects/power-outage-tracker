@@ -38,7 +38,7 @@ download_latest_file <- function(prefix) {
   # List the files in the S3 bucket for today's date
   files <- get_bucket(bucket_name, prefix = paste0(prefix, "/", today_date))
   
-  # Get the names of files in the bucket (extract the Key for each object)
+  # Get the names of files in the bucket
   bucket_files <- sapply(files, function(x) x$Key)
   
   # Identify files that are relevant for today
@@ -82,5 +82,3 @@ download_latest_file("va")
 download_latest_file("wv")
 download_latest_file("ky")
 download_latest_file("oh")
-
-# Run Rscript -e 'source("get-s3-data.R")'
