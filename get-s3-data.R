@@ -38,11 +38,27 @@ download_latest_file <- function(prefix) {
   # List the files in the S3 bucket for today's date
   files <- get_bucket(bucket_name, prefix = paste0(prefix, "/", today_date))
   
+  if (length(files) == 0) {
+    cat(paste("No files found in the bucket for", prefix, "today.\n"))
+    return(NULL)
+  }
+  
   # Get the names of files in the bucket
   bucket_files <- sapply(files, function(x) x$Key)
   
+  # Check if bucket_files is valid and non-empty
+  if (is.null(bucket_files) || length(bucket_files) == 0) {
+    cat(paste("No files found for", prefix, "on today's date.\n"))
+    return(NULL)
+  }
+  
   # Identify files that are relevant for today
   relevant_files <- bucket_files[basename(bucket_files) %in% basename(file_paths_today)]
+  
+  if (length(relevant_files) == 0) {
+    cat(paste("No relevant files found for", prefix, "today.\n"))
+    return(NULL)
+  }
   
   # Identify files that need to be downloaded (not already downloaded)
   files_to_download <- setdiff(relevant_files, downloaded_files)
@@ -67,6 +83,8 @@ download_latest_file <- function(prefix) {
     
     # Save the updated list of filenames
     writeLines(downloaded_files, file_list_path)
+    
+    cat(paste("Downloaded latest file for", prefix, ":", latest_file, "\n"))
   } else {
     cat(paste("No new files to download for", prefix, "today.\n"))
   }
