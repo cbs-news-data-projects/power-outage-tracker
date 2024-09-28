@@ -38,21 +38,29 @@ combined_data <- rbind(fl, ga, sc, nc, tn, va, wv, ky, oh)
 combined_data <- combined_data %>% filter(customer_out != 0) #removing 0 outages
 
 # Formatting date/time
-# Assuming the timestamps are in Pacific Time (adjust tz argument as necessary)
-combined_data$timestamp <- as.POSIXct(combined_data$timestamp, format="%a %b %d %Y %H:%M:%S", tz="America/New_York")
+# Replace '24:' with '00:' and convert to POSIXct
+combined_data$timestamp <- gsub("24:", "00:", combined_data$timestamp)
 
-# Convert from Pacific Time to Eastern Time and format to 12-hour time with AM/PM
-combined_data$timestamp_eastern <- format(with_tz(combined_data$timestamp, tzone = "America/New_York"), "%a %b %d %Y %I:%M %p")
+# Convert the cleaned timestamp to POSIXct
+combined_data$timestamp <- as.POSIXct(combined_data$timestamp, format="%a %b %d %Y %H:%M:%S")
+
+# Handle cases where the time was converted from 24:00
+combined_data$timestamp[combined_data$timestamp == as.POSIXct("2024-09-28 00:00:40", tz="UTC")] <- 
+  combined_data$timestamp[combined_data$timestamp == as.POSIXct("2024-09-28 00:00:40", tz="UTC")]
+
+# Format to desired output: "Fri Sep 27 2024 11:16 PM"
+combined_data$timestamp_formatted <- format(combined_data$timestamp, "%a %b %d %Y %I:%M %p")
+
 
 # Clean data
-clean <- combined_data %>% select(county, county_fips, customer_out, timestamp_eastern)
+clean <- combined_data %>% select(county, county_fips, customer_out, timestamp_formatted)
 
 result <- clean %>%
   group_by(county_fips) %>%
   summarise(
     county = first(county),  # Keep the first occurrence of county name
     total_customer_out = sum(customer_out),  # Sum the customer_out
-    latest_timestamp = max(timestamp_eastern),  # Get the latest timestamp
+    latest_timestamp = max(timestamp_formatted),  # Get the latest timestamp
     .groups = 'drop'  # Drop the grouping
   )
 
