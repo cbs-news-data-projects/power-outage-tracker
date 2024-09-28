@@ -42,10 +42,42 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Run script
+      - name: Download latest CSV file from S3
+        run: |
+          echo "Downloading latest CSV file from S3..."
+          Rscript -e "
+          library(aws.s3)
+          library(lubridate)
+
+          bucket <- 'fe-outge' # Replace with your bucket name
+          state_folder <- 'your/state/folder' # Replace with your specific state folder
+          today <- Sys.Date()
+          time_format <- '%Y-%m-%d %H:%M:%S'
+
+          # List all objects in the specified S3 folder
+          objects <- get_bucket(bucket = bucket, prefix = state_folder)
+
+          # Filter for today's CSV files
+          today_files <- objects[grepl(paste0(today), objects$LastModified),]
+          csv_files <- today_files[grepl('\\.csv$', today_files$Key),]
+
+          # Check if there are any CSV files
+          if (nrow(csv_files) > 0) {
+            # Get the latest CSV file by LastModified
+            latest_file <- csv_files[which.max(as.POSIXct(csv_files$LastModified, format = time_format)),]
+
+            # Download the latest file
+            save_object(latest_file$Key, file = file.path('data', latest_file$Key))
+            message('Downloaded: ', latest_file$Key)
+          } else {
+            stop('No CSV files found for today.')
+          }
+          "
+
+      - name: Run get-s3-data script
         run: Rscript -e 'source("get-s3-data.R")'
 
-      - name: Run script
+      - name: Run visualization script
         run: Rscript -e 'source("viz.R")'
 
       - name: Commit results
