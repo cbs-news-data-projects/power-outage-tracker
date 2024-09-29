@@ -37,8 +37,13 @@ download_latest_file <- function(prefix) {
   # List the files in the S3 bucket for today's date
   files <- get_bucket(bucket_name, prefix = paste0(prefix, "/", today_date))
   
-  # Get the names of files in the bucket
+  # Get the names of files in the bucket as a character vector
   bucket_files <- sapply(files, function(x) x$Key)
+  
+  # Ensure bucket_files is a character vector
+  if (is.null(bucket_files) || length(bucket_files) == 0) {
+    bucket_files <- character(0)
+  }
   
   # Identify files that are relevant for today
   relevant_files <- bucket_files[basename(bucket_files) %in% basename(file_paths_today)]
@@ -64,7 +69,7 @@ download_latest_file <- function(prefix) {
   }
 }
 
-# Download the latest files these prefixes
+# Download the latest files for these prefixes
 download_latest_file("fl")
 download_latest_file("ga")
 download_latest_file("tn")
