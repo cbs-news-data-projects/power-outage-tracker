@@ -15,6 +15,8 @@ dw_api_key <- Sys.getenv("DW_API_KEY")
 # Bringing in state data
 ## FLORIDA
 fl <- read.csv("data/fl/latest_file.csv") %>% clean_names
+## ALABAMA
+al <- read.csv("data/al/latest_file.csv") %>% clean_names()
 ## GEORGIA
 ga <- read.csv("data/ga/latest_file.csv") %>% clean_names
 ## SOUTH CAROLINA
@@ -34,7 +36,7 @@ oh <- read.csv("data/oh/latest_file.csv") %>% clean_names
 
 
 # Combine the two data frames
-combined_data <- rbind(fl, ga, sc, nc, tn, va, wv, ky, oh)
+combined_data <- rbind(fl, al, ga, sc, nc, tn, va, wv, ky, oh)
 combined_data <- combined_data %>% filter(customer_out != 0) #removing 0 outages
 
 # Formatting date/time
@@ -53,13 +55,15 @@ combined_data$timestamp_formatted <- format(combined_data$timestamp, "%a %b %d %
 
 
 # Clean data
-clean <- combined_data %>% select(county, county_fips, customer_out, timestamp_formatted)
+clean <- combined_data %>% select(county, county_fips, customer_out, est_customers_served, timestamp_formatted)
 
 result <- clean %>%
   group_by(county_fips) %>%
   summarise(
     county = first(county),  # Keep the first occurrence of county name
-    total_customer_out = sum(customer_out),  # Sum the customer_out
+    total_customer_out = sum(customer_out),  # Sum customer_out for each county
+    est_customers_served = sum(est_customers_served),  # Sum total customers served
+    pct_customers_out = round((total_customer_out / est_customers_served) * 100, 1),  # Calculate percentage and round to 1 decimal
     latest_timestamp = max(timestamp_formatted),  # Get the latest timestamp
     .groups = 'drop'  # Drop the grouping
   )
@@ -87,3 +91,5 @@ dw_edit_chart(
 
 # Publish the chart
 dw_publish_chart(chart_id = "Uhq3Z")
+
+write.csv(result, "output/clean_data.csv")
