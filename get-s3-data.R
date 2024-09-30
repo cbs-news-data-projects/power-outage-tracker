@@ -17,7 +17,7 @@ if (file.exists(file_list_path)) {
 }
 
 # Get today's date in "YYYY-MM-DD" format
-today_date <- format(Sys.Date(), "%Y-%m-%d")
+today_date <- format(as.POSIXct(Sys.time(), tz = "America/New_York"), "%Y-%m-%d")
 
 # Define the minutes and seconds
 minute_second_pairs <- c("00:01", "15:01", "30:01", "45:01")
