@@ -1,4 +1,4 @@
-name: run
+name: Updating U.S. map
 
 on:
   push:
