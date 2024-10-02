@@ -46,7 +46,7 @@ jobs:
         run: Rscript -e 'source("get-s3-data.R")'
 
       - name: Run script
-        run: Rscript -e 'source("viz.R")'
+        run: Rscript -e 'source("US.R")'
 
       - name: Commit results
         run: |

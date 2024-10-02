@@ -55,10 +55,11 @@ combined_data$timestamp_formatted <- format(combined_data$timestamp, "%a %b %d %
 
 
 # Clean data
-clean <- combined_data %>% select(county, county_fips, customer_out, est_customers_served, timestamp_formatted)
+clean <- combined_data %>%
+  select(county, county_fips, state, customer_out, est_customers_served, timestamp_formatted)
 
 result <- clean %>%
-  group_by(county_fips) %>%
+  group_by(county_fips, state) %>%  # Group by both county_fips and state
   summarise(
     county = first(county),  # Keep the first occurrence of county name
     total_customer_out = sum(customer_out),  # Sum customer_out for each county
@@ -67,6 +68,7 @@ result <- clean %>%
     latest_timestamp = max(timestamp_formatted),  # Get the latest timestamp
     .groups = 'drop'  # Drop the grouping
   )
+
 
 # Get a total number of outages for the chatter
 total_outages <- sum(combined_data$customer_out)
