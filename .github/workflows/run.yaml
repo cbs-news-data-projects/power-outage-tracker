@@ -45,8 +45,8 @@ jobs:
       - name: Run script
         run: Rscript -e 'source("get-s3-data.R")'
 
-      - name: Run script
-        run: Rscript -e 'source("US.R")'
+      #- name: Run script
+       # run: Rscript -e 'source("US.R")'
         
       - name: Run script
         run: Rscript -e 'source("florida.R")'
