@@ -1,4 +1,4 @@
-name: Updating U.S. map
+name: Updating map
 
 on:
   push:
