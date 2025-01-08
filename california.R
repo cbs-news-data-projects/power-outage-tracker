@@ -25,14 +25,17 @@ california_market <- read.csv("data/ca/latest_file.csv") %>%
 # Replace '24:' with '00:' and convert to POSIXct
 california_market$timestamp <- gsub("24:", "00:", california_market$timestamp)
 
-# Convert the cleaned timestamp to POSIXct
-california_market$timestamp <- as.POSIXct(california_market$timestamp, format="%a %b %d %Y %H:%M:%S")
 
-# Handle cases where the time was converted from 24:00
-california_market$timestamp[california_market$timestamp == as.POSIXct("2024-09-28 00:00:40", tz="UTC")] <- 
-  california_market$timestamp[california_market$timestamp == as.POSIXct("2024-09-28 00:00:40", tz="UTC")]
+# Convert the cleaned timestamp to POSIXct with a specified time zone (EST)
+california_market$timestamp <- as.POSIXct(california_market$timestamp, format="%a %b %d %Y %H:%M:%S", tz="America/New_York")
 
-# Format to desired output: "Fri Sep 27 2024 11:16 PM"
+# Convert from EST (America/New_York) to UTC first
+california_market$timestamp <- with_tz(california_market$timestamp, tzone = "UTC")
+
+# Now convert from UTC to Pacific Standard Time (PST/PDT)
+california_market$timestamp <- with_tz(california_market$timestamp, tzone = "America/Los_Angeles")
+
+# Format to desired output
 california_market$timestamp_formatted <- format(california_market$timestamp, "%a %b %d %Y %I:%M %p")
 
 # Clean data
