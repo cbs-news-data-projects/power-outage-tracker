@@ -65,7 +65,7 @@ download_latest_file <- function(prefix) {
 }
 
 # Download the latest files these prefixes
-download_latest_file("fl")
+#download_latest_file("fl")
 #download_latest_file("ga")
 #download_latest_file("tn")
 #download_latest_file("sc")
@@ -76,4 +76,4 @@ download_latest_file("fl")
 #download_latest_file("oh")
 #download_latest_file("al")
 #download_latest_file("tx")
-#download_latest_file("ca")
+download_latest_file("ca")
