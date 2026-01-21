@@ -1,0 +1,7 @@
+utility,county,county fips,state,customer out,est. customers served,timestamp
+"Delaware Electric Coop","Kent County","10001","Delaware",1,30635,"Wed Jan 21 2026 11:15:19"
+"Delaware Electric Coop","Sussex County","10005","Delaware",8,91056,"Wed Jan 21 2026 11:15:19"
+"Delaware Electric Coop","Unknown County","","Delaware",0,65,"Wed Jan 21 2026 11:15:19"
+"Delmarva Power","Kent County","10001","Delaware",0,21283,"Wed Jan 21 2026 11:15:54"
+"Delmarva Power","New Castle County","10003","Delaware",60,231608,"Wed Jan 21 2026 11:15:54"
+"Delmarva Power","Sussex County","10005","Delaware",301,84635,"Wed Jan 21 2026 11:15:54"

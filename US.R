@@ -34,13 +34,32 @@ ky <- read.csv("data/ky/latest_file.csv") %>% clean_names
 ## OHIO
 oh <- read.csv("data/oh/latest_file.csv") %>% clean_names
 ## CT
-oh <- read.csv("data/ct/latest_file.csv") %>% clean_names
+ct <- read.csv("data/ct/latest_file.csv") %>% clean_names
 ## VT
-oh <- read.csv("data/vt/latest_file.csv") %>% clean_names
-
+vt <- read.csv("data/vt/latest_file.csv") %>% clean_names
+## DE
+de <- read.csv("data/de/latest_file.csv") %>% clean_names
+## ME
+me <- read.csv("data/me/latest_file.csv") %>% clean_names
+## MA
+ma <- read.csv("data/ma/latest_file.csv") %>% clean_names
+## RI
+ri <- read.csv("data/ri/latest_file.csv") %>% clean_names
+## NY
+ny <- read.csv("data/ny/latest_file.csv") %>% clean_names
+## NJ
+nj <- read.csv("data/nj/latest_file.csv") %>% clean_names
+## PA
+pa <- read.csv("data/pa/latest_file.csv") %>% clean_names
+## MD
+md <- read.csv("data/md/latest_file.csv") %>% clean_names
+## IN
+ind <- read.csv("data/in/latest_file.csv") %>% clean_names
+## NH
+nh <- read.csv("data/nh/latest_file.csv") %>% clean_names
 
 # Combine the two data frames
-combined_data <- rbind(fl, al, ga, sc, nc, tn, va, wv, ky, oh)
+combined_data <- rbind(fl, al, ga, sc, nc, tn, va, wv, ky, oh, ct, vt, de, me, ma, ri, ny, nj, pa, md, ind, nh)
 combined_data <- combined_data %>% filter(customer_out != 0) #removing 0 outages
 
 # Formatting date/time
