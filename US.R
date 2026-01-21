@@ -33,6 +33,10 @@ wv <- read.csv("data/wv/latest_file.csv") %>% clean_names
 ky <- read.csv("data/ky/latest_file.csv") %>% clean_names
 ## OHIO
 oh <- read.csv("data/oh/latest_file.csv") %>% clean_names
+## CT
+oh <- read.csv("data/ct/latest_file.csv") %>% clean_names
+## VT
+oh <- read.csv("data/vt/latest_file.csv") %>% clean_names
 
 
 # Combine the two data frames
@@ -77,14 +81,14 @@ total_outages <- format(total_outages, big.mark = ",", scientific = FALSE)
 
 # Make the datawrapper
 datawrapper_auth(api_key = dw_api_key)
-dw_data_to_chart(result, "Uhq3Z", api_key = dw_api_key)
+dw_data_to_chart(result, "MJmSd", api_key = dw_api_key)
 
 dw_edit_chart(
-  chart_id = "Uhq3Z",
+  chart_id = "MJmSd",
   api_key = dw_api_key,
-  title = "Tracking power outages in Hurricane Helene's path",
+  title = "Tracking power outages along winter storm's path",
   intro = paste( "There are currently", "<b>", total_outages, "</b>", "customers experiencing power outages in the states highlighted on the map below. Click or hover over a county to see more information."),
-  annotate = "Note: Data updates every 30 minutes",
+  annotate = "Data updates every 30 minutes",
   byline = "Taylor Johnston / CBS News",
   source_name = "Find Energy",
   source_url = "https://findenergy.com/power-outage/",
@@ -92,6 +96,6 @@ dw_edit_chart(
 )
 
 # Publish the chart
-dw_publish_chart(chart_id = "Uhq3Z")
+dw_publish_chart(chart_id = "MJmSd")
 
 write.csv(result, "output/clean_data.csv")
