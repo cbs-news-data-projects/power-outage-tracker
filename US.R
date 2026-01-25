@@ -65,9 +65,25 @@ la <- read.csv("data/la/latest_file.csv") %>% clean_names
 ms <- read.csv("data/ms/latest_file.csv") %>% clean_names
 ## AR
 ar <- read.csv("data/ar/latest_file.csv") %>% clean_names
+## OK
+ok <- read.csv("data/ok/latest_file.csv") %>% clean_names
+## NM
+nm <- read.csv("data/nm/latest_file.csv") %>% clean_names
+## MO
+mo <- read.csv("data/mo/latest_file.csv") %>% clean_names
+## MN
+mn <- read.csv("data/mn/latest_file.csv") %>% clean_names
+## IL
+il <- read.csv("data/il/latest_file.csv") %>% clean_names
+## IA
+ia <- read.csv("data/ia/latest_file.csv") %>% clean_names
+## WI
+wi <- read.csv("data/wi/latest_file.csv") %>% clean_names
+## MI
+mi <- read.csv("data/mi/latest_file.csv") %>% clean_names
 
 # Combine the two data frames
-combined_data <- rbind(fl, al, ga, sc, nc, tn, va, wv, ky, oh, ct, vt, de, me, ma, ri, ny, nj, pa, md, ind, nh, tx, la, ms, ar)
+combined_data <- rbind(fl, al, ga, sc, nc, tn, va, wv, ky, oh, ct, vt, de, me, ma, ri, ny, nj, pa, md, ind, nh, tx, la, ms, ar, ok, nm, mo, mn, il, ia, wi, mi)
 combined_data <- combined_data %>% filter(customer_out != 0) #removing 0 outages
 
 # Formatting date/time
