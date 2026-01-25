@@ -57,9 +57,15 @@ md <- read.csv("data/md/latest_file.csv") %>% clean_names
 ind <- read.csv("data/in/latest_file.csv") %>% clean_names
 ## NH
 nh <- read.csv("data/nh/latest_file.csv") %>% clean_names
+## TX
+tx <- read.csv("data/tx/latest_file.csv") %>% clean_names
+## LA
+la <- read.csv("data/la/latest_file.csv") %>% clean_names
+## MS
+ms <- read.csv("data/ms/latest_file.csv") %>% clean_names
 
 # Combine the two data frames
-combined_data <- rbind(fl, al, ga, sc, nc, tn, va, wv, ky, oh, ct, vt, de, me, ma, ri, ny, nj, pa, md, ind, nh)
+combined_data <- rbind(fl, al, ga, sc, nc, tn, va, wv, ky, oh, ct, vt, de, me, ma, ri, ny, nj, pa, md, ind, nh, tx, la, ms)
 combined_data <- combined_data %>% filter(customer_out != 0) #removing 0 outages
 
 # Formatting date/time
