@@ -95,9 +95,11 @@ co <- read.csv("data/co/latest_file.csv") %>% clean_names
 wy <- read.csv("data/wy/latest_file.csv") %>% clean_names
 ## MT
 mt <- read.csv("data/mt/latest_file.csv") %>% clean_names
+## ME
+me <- read.csv("data/me/latest_file.csv") %>% clean_names
 
 # Combine the two data frames
-combined_data <- rbind(fl, al, ga, sc, nc, tn, va, wv, ky, oh, ct, vt, de, me, ma, ri, ny, nj, pa, md, ind, nh, tx, la, ms, ar, ok, nm, mo, mn, il, ia, wi, mi, ne, ks, nd, sd, co, wy, mt)
+combined_data <- rbind(fl, al, ga, sc, nc, tn, va, wv, ky, oh, ct, vt, de, me, ma, ri, ny, nj, pa, md, ind, nh, tx, la, ms, ar, ok, nm, mo, mn, il, ia, wi, mi, ne, ks, nd, sd, co, wy, mt, me)
 combined_data <- combined_data %>% filter(customer_out != 0) #removing 0 outages
 
 # Formatting date/time
