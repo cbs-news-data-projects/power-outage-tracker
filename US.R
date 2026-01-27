@@ -149,8 +149,8 @@ dw_edit_chart(
   intro = paste( "There are currently", "<b>", total_outages, "</b>", "customers experiencing power outages in the states highlighted on the map below. Click or hover over a county to see more information."),
   annotate = "Data updates every 30 minutes",
   byline = "Taylor Johnston / CBS News",
-  source_name = "Find Energy",
-  source_url = "https://findenergy.com/power-outage/",
+  source_name = "PowerOutage.com",
+  source_url = "https://poweroutage.com/",
   folderId = "267166"
 )
 
