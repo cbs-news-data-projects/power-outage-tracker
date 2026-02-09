@@ -40,13 +40,11 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
       - name: Run script
-        run: Rscript -e 'source("get-s3-data.R")'
-      - name: Run script
-        run: Rscript -e 'source("US.R")'
+          run: Rscript -e 'source("get-API-data.R")'
       - name: Commit results
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          git add get-s3-data.R
-          git commit -m 'ran get-s3-data.R' || echo "No changes to commit"
+          git add get-API-data.R
+          git commit -m 'ran get-API-data.R' || echo "No changes to commit"
           git push origin || echo "No changes to commit"
