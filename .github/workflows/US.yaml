@@ -16,35 +16,20 @@ jobs:
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           packages: |
+            any::httr
+            any::jsonlite
             any::dplyr 
-            any::janitor
-            any::tidyr
+            any::tibble
             any::lubridate
             any::dotenv
-            any::aws.s3
-      - name: Set up environment variables based on DATAWRAPPR secret
-        run: 'echo "DW_API_KEY=${{ secrets.DATAWRAPPR }}" >> $GITHUB_ENV'
-      - name: Set up AWS credentials
-        run: >
-          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >>
-          $GITHUB_ENV
-
-          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >>
-          $GITHUB_ENV
-
-          echo "AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }}" >>
-          $GITHUB_ENV
+      - name: Set up environment variables
+        run: |
+          echo "DW_API_KEY=${{ secrets.DATAWRAPPR }}" >> $GITHUB_ENV
+          echo "POWEROUTAGE_API_KEY=${{ secrets.POWEROUTAGE_API_KEY }}" >> $GITHUB_ENV
       - name: Install DatawRappr package
         run: |
           Rscript -e "pak::pkg_install('munichrocker/DatawRappr')"
       - name: Check out repository
         uses: actions/checkout@v4
-      - name: Run script
-          run: Rscript -e 'source("get-API-data.R")'
-      - name: Commit results
-        run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add get-API-data.R
-          git commit -m 'ran get-API-data.R' || echo "No changes to commit"
-          git push origin || echo "No changes to commit"
+      - name: Run get-API-data script
+        run: Rscript -e 'source("get-API-data.R")'
