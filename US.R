@@ -1,8 +1,9 @@
 library(dplyr)
-library(DatawRappr)
 library(dotenv)
 library(janitor)
 library(lubridate)
+
+source("datawrapper.R")
 
 # Load the .env file
 tryCatch({
@@ -95,11 +96,9 @@ co <- read.csv("data/co/latest_file.csv") %>% clean_names
 wy <- read.csv("data/wy/latest_file.csv") %>% clean_names
 ## MT
 mt <- read.csv("data/mt/latest_file.csv") %>% clean_names
-## ME
-me <- read.csv("data/me/latest_file.csv") %>% clean_names
 
-# Combine the two data frames
-combined_data <- rbind(fl, al, ga, sc, nc, tn, va, wv, ky, oh, ct, vt, de, me, ma, ri, ny, nj, pa, md, ind, nh, tx, la, ms, ar, ok, nm, mo, mn, il, ia, wi, mi, ne, ks, nd, sd, co, wy, mt, me)
+# Combine all state data frames
+combined_data <- rbind(fl, al, ga, sc, nc, tn, va, wv, ky, oh, ct, vt, de, me, ma, ri, ny, nj, pa, md, ind, nh, tx, la, ms, ar, ok, nm, mo, mn, il, ia, wi, mi, ne, ks, nd, sd, co, wy, mt)
 combined_data <- combined_data %>% filter(customer_out != 0) #removing 0 outages
 
 # Formatting date/time
@@ -108,10 +107,6 @@ combined_data$timestamp <- gsub("24:", "00:", combined_data$timestamp)
 
 # Convert the cleaned timestamp to POSIXct
 combined_data$timestamp <- as.POSIXct(combined_data$timestamp, format="%a %b %d %Y %H:%M:%S")
-
-# Handle cases where the time was converted from 24:00
-combined_data$timestamp[combined_data$timestamp == as.POSIXct("2024-09-28 00:00:40", tz="UTC")] <- 
-  combined_data$timestamp[combined_data$timestamp == as.POSIXct("2024-09-28 00:00:40", tz="UTC")]
 
 # Format to desired output: "Fri Sep 27 2024 11:16 PM"
 combined_data$timestamp_formatted <- format(combined_data$timestamp, "%a %b %d %Y %I:%M %p")
@@ -139,22 +134,21 @@ total_outages <- format(total_outages, big.mark = ",", scientific = FALSE)
 
 
 # Make the datawrapper
-datawrapper_auth(api_key = dw_api_key)
-dw_data_to_chart(result, "MJmSd", api_key = dw_api_key)
+dw_upload_data("MJmSd", result, dw_api_key)
 
-dw_edit_chart(
+dw_update_chart(
   chart_id = "MJmSd",
   api_key = dw_api_key,
   title = "Tracking power outages along winter storm's path",
   intro = paste( "There are currently", "<b>", total_outages, "</b>", "customers experiencing power outages in the states highlighted on the map below. Click or hover over a county to see more information."),
-  annotate = "Data updates every 30 minutes",
+  annotate = "Data updates daily",
   byline = "Taylor Johnston / CBS News",
   source_name = "PowerOutage.com",
   source_url = "https://poweroutage.com/",
-  folderId = "267166"
+  folder_id = "267166"
 )
 
 # Publish the chart
-dw_publish_chart(chart_id = "MJmSd")
+dw_publish("MJmSd", dw_api_key)
 
 write.csv(result, "output/clean_data.csv")

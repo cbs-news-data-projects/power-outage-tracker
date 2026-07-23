@@ -34,9 +34,6 @@ jobs:
         run: |
           echo "DW_API_KEY=${{ secrets.DATAWRAPPR }}" >> $GITHUB_ENV
           echo "POWEROUTAGE_API_KEY=${{ secrets.POWEROUTAGE_API_KEY }}" >> $GITHUB_ENV
-      
-      - name: Install DatawRappr package
-        run: |
-          Rscript -e "pak::pkg_install('munichrocker/DatawRappr')"
+
       - name: Run get-API-data script
         run: Rscript -e 'source("get-API-data.R")'
