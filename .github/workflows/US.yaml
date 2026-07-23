@@ -30,14 +30,6 @@ jobs:
             any::lubridate
             any::dotenv
       
-      - name: Cache DatawRappr
-        uses: actions/cache@v3
-        with:
-          path: ~/work/_temp/Library
-          key: ${{ runner.os }}-datawrappr-${{ hashFiles('**/US.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-datawrappr-
-      
       - name: Set up environment variables
         run: |
           echo "DW_API_KEY=${{ secrets.DATAWRAPPR }}" >> $GITHUB_ENV
