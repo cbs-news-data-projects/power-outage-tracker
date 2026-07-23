@@ -8,6 +8,16 @@ library(jsonlite)
 
 dw_base <- "https://api.datawrapper.de/v3"
 
+# Stop with a clear message that includes the API's response body.
+dw_check <- function(resp, task) {
+  if (http_error(resp)) {
+    body <- content(resp, as = "text", encoding = "UTF-8")
+    stop(sprintf("Failed to %s: HTTP %s. %s", task, status_code(resp), body),
+         call. = FALSE)
+  }
+  invisible(resp)
+}
+
 # Upload a data frame to a chart as CSV.
 dw_upload_data <- function(chart_id, df, api_key) {
   csv <- paste(
@@ -18,9 +28,10 @@ dw_upload_data <- function(chart_id, df, api_key) {
     sprintf("%s/charts/%s/data", dw_base, chart_id),
     add_headers(Authorization = paste("Bearer", api_key)),
     content_type("text/csv"),
-    body = csv
+    body = csv,
+    user_agent("cbs-news-power-outage-tracker")
   )
-  stop_for_status(resp, task = "upload data to Datawrapper")
+  dw_check(resp, "upload data to Datawrapper")
   invisible(resp)
 }
 
@@ -48,9 +59,10 @@ dw_update_chart <- function(chart_id, api_key, title = NULL, intro = NULL,
     sprintf("%s/charts/%s", dw_base, chart_id),
     add_headers(Authorization = paste("Bearer", api_key)),
     content_type_json(),
-    body = toJSON(payload, auto_unbox = TRUE)
+    body = toJSON(payload, auto_unbox = TRUE),
+    user_agent("cbs-news-power-outage-tracker")
   )
-  stop_for_status(resp, task = "update Datawrapper chart")
+  dw_check(resp, "update Datawrapper chart")
   invisible(resp)
 }
 
@@ -58,8 +70,9 @@ dw_update_chart <- function(chart_id, api_key, title = NULL, intro = NULL,
 dw_publish <- function(chart_id, api_key) {
   resp <- POST(
     sprintf("%s/charts/%s/publish", dw_base, chart_id),
-    add_headers(Authorization = paste("Bearer", api_key))
+    add_headers(Authorization = paste("Bearer", api_key)),
+    user_agent("cbs-news-power-outage-tracker")
   )
-  stop_for_status(resp, task = "publish Datawrapper chart")
+  dw_check(resp, "publish Datawrapper chart")
   invisible(resp)
 }
