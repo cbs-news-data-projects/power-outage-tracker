@@ -2,9 +2,10 @@ library(httr)
 library(jsonlite)
 library(dplyr)
 library(dotenv)
-library(DatawRappr)
 library(tibble)
 library(lubridate)
+
+source("datawrapper.R")
 
 
 # ----------------------------
@@ -122,23 +123,17 @@ total_people_out <- format(total_people_out, big.mark = ",", scientific = FALSE)
 # ----------------------------
 # Push to Datawrapper
 # ----------------------------
-datawrapper_auth(api_key = dw_api_key)
+dw_upload_data("MJmSd", data, dw_api_key)
 
-dw_data_to_chart(
-  data,
-  chart_id = "MJmSd",
-  api_key = dw_api_key
-)
-
-dw_edit_chart(
+dw_update_chart(
   chart_id = "MJmSd",
   api_key = dw_api_key,
   title = "Tracking power outages",
   intro = paste( "There are currently", "<b>", total_people_out, "</b>", "customers experiencing power outages in the states highlighted on the map below. Click or hover over a county to see more information."),
-  annotate = "Data updates every 30 minutes",
+  annotate = "Data updates daily",
   byline = "Taylor Johnston / CBS News",
   source_name = "PowerOutage.com",
   source_url = "https://poweroutage.com/"
 )
 
-dw_publish_chart(chart_id = "MJmSd")
+dw_publish("MJmSd", dw_api_key)
