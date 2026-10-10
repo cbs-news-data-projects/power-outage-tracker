@@ -120,15 +120,15 @@ data <- data %>%
   )
 total_people_out <- sum(data$CustomersOut, na.rm = TRUE)
 total_people_out <- format(total_people_out, big.mark = ",", scientific = FALSE)
-# Top three states by customers out, e.g. "1,200 in Florida, 900 in Texas and 400 in Georgia"
+# Top three states by customers out, e.g. "<b>1,200</b> in Florida, <b>900</b> in Texas and <b>400</b> in Georgia"
 top_states <- data %>%
   group_by(StateName) %>%
   summarise(out = sum(CustomersOut, na.rm = TRUE), .groups = "drop") %>%
   filter(out > 0) %>%
   arrange(desc(out)) %>%
   slice_head(n = 3)
-top_parts <- paste(format(top_states$out, big.mark = ",", trim = TRUE),
-                   "in", top_states$StateName)
+top_parts <- paste0("<b>", format(top_states$out, big.mark = ",", trim = TRUE),
+                    "</b> in ", top_states$StateName)
 n_parts <- length(top_parts)
 top_states_text <- if (n_parts == 0) {
   ""
@@ -158,7 +158,7 @@ dw_update_chart(
   api_key = dw_api_key,
   title = "Tracking power outages",
   intro = paste( "There are currently", "<b>", total_people_out, "</b>", "customers experiencing power outages in the states highlighted on the map below.", top_states_sentence, "Click or hover over a county to see more information."),
-  annotate = paste0("Data updates at least hourly. Latest data from PowerOutage.com: ", latest_update, "."),
+  annotate = paste0("Data updates at least hourly. Last updated: ", latest_update, "."),
   byline = "CBS News Data Team",
   source_name = "PowerOutage.com",
   source_url = "https://poweroutage.com/"
