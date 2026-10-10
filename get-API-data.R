@@ -159,7 +159,7 @@ dw_update_chart(
   title = "Tracking power outages",
   intro = paste( "There are currently", "<b>", total_people_out, "</b>", "customers experiencing power outages in the states highlighted on the map below.", top_states_sentence, "Click or hover over a county to see more information."),
   annotate = paste0("Data updates at least hourly. Last updated: ", latest_update, "."),
-  byline = "CBS News Data Team",
+  byline = "",
   source_name = "PowerOutage.com",
   source_url = "https://poweroutage.com/"
 )
