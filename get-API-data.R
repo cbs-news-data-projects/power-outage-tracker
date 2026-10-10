@@ -120,6 +120,13 @@ data <- data %>%
   )
 total_people_out <- sum(data$CustomersOut, na.rm = TRUE)
 total_people_out <- format(total_people_out, big.mark = ",", scientific = FALSE)
+# Newest county timestamp from the API (data freshness, not run time)
+latest_update <- max(data$LastUpdatedDateTime, na.rm = TRUE) %>%
+  with_tz(tzone = "America/New_York") %>%
+  format("%b. %d at %I:%M %p ET") %>%
+  sub("^(\\w+\\. )0", "\\1", .) %>%
+  sub(" at 0", " at ", .)
+
 # ----------------------------
 # Push to Datawrapper
 # ----------------------------
@@ -130,8 +137,8 @@ dw_update_chart(
   api_key = dw_api_key,
   title = "Tracking power outages",
   intro = paste( "There are currently", "<b>", total_people_out, "</b>", "customers experiencing power outages in the states highlighted on the map below. Click or hover over a county to see more information."),
-  annotate = "Data updates daily",
-  byline = "Taylor Johnston / CBS News",
+  annotate = paste0("Data updates at least hourly. Latest data from PowerOutage.com: ", latest_update, "."),
+  byline = "CBS News Data Team",
   source_name = "PowerOutage.com",
   source_url = "https://poweroutage.com/"
 )
