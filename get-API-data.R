@@ -158,7 +158,7 @@ dw_update_chart(
   api_key = dw_api_key,
   title = "Tracking power outages",
   intro = paste( "There are currently", "<b>", total_people_out, "</b>", "customers experiencing power outages in the states highlighted on the map below.", top_states_sentence, "Click or hover over a county to see more information."),
-  annotate = paste0("Data updates twice daily, in the early morning and around noon ET. Last updated: ", latest_update, "."),
+  annotate = paste0("Data updates twice daily. Last updated: ", latest_update, "."),
   byline = "",
   source_name = "PowerOutage.com",
   source_url = "https://poweroutage.com/"
